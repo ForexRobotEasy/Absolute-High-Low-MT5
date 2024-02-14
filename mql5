@@ -1,0 +1,49 @@
+mql5
+//+------------------------------------------------------------------+
+//|                                                   Absolute High Low MT5 |
+//|                                     https://www.forexroboteasy.com |
+//|                                           Developed by Forex Robot Easy Team |
+//+------------------------------------------------------------------+
+#property copyright 'Forex Robot Easy Team'
+#property link      'https://www.forexroboteasy.com'
+
+// Indicator input parameters
+input int timeFrame = PERIOD_H1; // Time frame for calculating the high and low
+input int sensitivity = 10; // Sensitivity for identifying extreme points
+
+// Global variables
+double highest;
+double lowest;
+
+//+------------------------------------------------------------------+
+//| Custom indicator initialization function                         |
+//+------------------------------------------------------------------+
+int OnInit()
+{
+   IndicatorSetString(INDICATOR_SHORTNAME, 'Absolute High Low MT5');
+   SetIndexStyle(0, DRAW_LINE);
+   SetIndexBuffer(0, highest);
+   SetIndexStyle(1, DRAW_LINE);
+   SetIndexBuffer(1, lowest);
+   return(INIT_SUCCEEDED);
+}
+
+//+------------------------------------------------------------------+
+//| Custom indicator iteration function                              |
+//+------------------------------------------------------------------+
+int OnCalculate(const int rates_total, const int prev_calculated, const datetime &time[], const double &open[], const double &high[], const double &low[], const double &close[], const long &tick_volume[], const long &volume[], const int &spread[])
+{
+   int limit = rates_total - prev_calculated;
+
+   // Calculate the highest and lowest points
+   for (int i = 0; i < limit; i++)
+   {
+      double currentHigh = High[iHighest(NULL, timeFrame, MODE_HIGH, sensitivity, i)];
+      double currentLow = Low[iLowest(NULL, timeFrame, MODE_LOW, sensitivity, i)];
+
+      highest[i] = currentHigh;
+      lowest[i] = currentLow;
+   }
+   
+   return(rates_total);
+}
